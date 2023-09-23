@@ -1,4 +1,4 @@
-const Gameboard = (function() {
+const Gameboard = (() => {
     const _gameboard = document.getElementById('gameBoard');
     let _board = [
         [null, null, null],
@@ -10,7 +10,7 @@ const Gameboard = (function() {
         const cell = e.target;
         const x = cell.dataset.row;
         const y = cell.dataset.col;
-        GameController.play(x, y);
+        Controller.play(x, y);
     });
 
     function _createCell(x, y, pick) {
@@ -21,7 +21,7 @@ const Gameboard = (function() {
         return _board;
     }
 
-    function updateBoard(x, y, pick) {
+    const updateBoard = (x, y, pick) => {
         if (!_board[x][y]) {
             _board[x][y] = pick;
             _createCell(x, y, pick);
@@ -35,7 +35,7 @@ const Gameboard = (function() {
                 cell.classList.add('cell')
                 cell.dataset.row = i;
                 cell.dataset.col = j;
-                grid.appendChild(cell);
+                _gameboard.appendChild(cell);
             }
         }
     }
@@ -48,15 +48,35 @@ const Gameboard = (function() {
 })();
 
 const Player = (name, pick) => {
-    const setMove = (x, y) => {
-        Gameboard.updateBoard(x, y, this.pick);
-        GameController.switchPlayer();
-    }
-
     return {
         name,
         pick,
-        setMove 
+        setMove: function(x, y) {
+            Gameboard.updateBoard(x, y, this.pick);
+            Controller.switchPlayer();
+        }
     };
 }
+
+const Controller = (() => {
+    const player1 = Player('Player 1', 'X');
+    const player2 = Player('Player 2', 'O');
+    let currentPlayer = player1;
+
+    const switchPlayer = () => {
+        currentPlayer = (currentPlayer === player1) ? player2 : player1;
+    }
+    const play = (x, y) => {
+        const board = Gameboard.getBoard();
+        if (!board[x][y]) {
+            currentPlayer.setMove(x, y);
+        }
+    }
+    return {
+        switchPlayer,
+        play,
+    };
+})();
+
+Gameboard.initialize();
 
