@@ -13,11 +13,11 @@ const Gameboard = (() => {
         Controller.play(x, y);
     });
 
-    function _createCell(x, y, pick) {
+    const _createCell = (x, y, pick) => {
         const index = x * 3 + parseInt(y);
         _gameboard.children[index].textContent = pick;
     }
-    function getBoard() {
+    const getBoard = () => {
         return _board;
     }
 
@@ -28,7 +28,7 @@ const Gameboard = (() => {
         }
     }
 
-    function initialize() {
+    const initialize = () => {
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
                 const cell = document.createElement('div');
@@ -40,10 +40,15 @@ const Gameboard = (() => {
         }
     }
 
+    const resetBoard = () =>{
+        window.location.reload();
+    }
+
     return {
         getBoard,
         updateBoard,
-        initialize
+        initialize,
+        resetBoard
     };
 })();
 
@@ -67,11 +72,18 @@ const Controller = (() => {
             player1.pick = pick.value;
             player2.pick = (pick.value === 'X') ? 'O' : 'X';
             _currentPlayer = (player1.pick === 'X') ? player1 : player2;
+            _displayPlayerSelection(player1.pick, player2.pick);
         })
     })
     const player1 = Player('Player 1');
     const player2 = Player('Player 2');
 
+    const _displayPlayerSelection = (pick1, pick2) => {
+        const p1Mark = document.querySelector('.player1');
+        const p2Mark = document.querySelector('.player2');
+        p1Mark.textContent = `Player 1 is ${pick1}`;
+        p2Mark.textContent = `Player 2 is ${pick2}`;
+    }
     const _checkWinner = () => {
         const board = Gameboard.getBoard();
 
@@ -107,10 +119,17 @@ const Controller = (() => {
             _currentPlayer.setMove(x, y);
             setTimeout(() => {
                 const winner = _checkWinner();
-                const result = document.querySelector('.display-result')
+                const result = document.querySelector('.display-result');
+                const resetGame = document.querySelector('.reset-game');
                 const gameWinner = (winner === player1.pick) ? player1.name : player2.name;
                 if (winner) {
                     result.textContent = `${gameWinner} has won the game!`;
+                    const resetBtn = document.createElement('button');
+                    resetBtn.textContent = 'Restart Game';
+                    resetGame.appendChild(resetBtn);
+                    resetBtn.addEventListener('click', () => {
+                        Gameboard.resetBoard();
+                    });
                 }
             }, 0);
         }
