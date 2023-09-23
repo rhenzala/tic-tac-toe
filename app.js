@@ -47,7 +47,7 @@ const Gameboard = (function() {
     };
 })();
 
-function Player(name, pick) {
+const Player = (name, pick) => {
     const setMove = (x, y) => {
         Gameboard.updateBoard(x, y, this.pick);
         GameController.switchPlayer();
