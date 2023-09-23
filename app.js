@@ -66,13 +66,17 @@ const Player = (name) => {
 
 const Controller = (() => {
     let _currentPlayer;
-    const _picks = document.querySelectorAll('.mark')
+    const _picks = document.querySelectorAll('.mark');
     _picks.forEach(pick => {
         pick.addEventListener('click', () => {
             player1.pick = pick.value;
             player2.pick = (pick.value === 'X') ? 'O' : 'X';
             _currentPlayer = (player1.pick === 'X') ? player1 : player2;
             _displayPlayerSelection(player1.pick, player2.pick);
+
+            _picks.forEach(btn => {
+                btn.disabled = true;
+            });
         })
     })
     const player1 = Player('Player 1');
@@ -84,6 +88,8 @@ const Controller = (() => {
         p1Mark.textContent = `Player 1 is ${pick1}`;
         p2Mark.textContent = `Player 2 is ${pick2}`;
     }
+    
+
     const _checkWinner = () => {
         const board = Gameboard.getBoard();
 
@@ -108,12 +114,24 @@ const Controller = (() => {
         return null; 
     }
 
+    const _isDraw = () => {
+        const board = Gameboard.getBoard();
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                if (board[i][j] === null) {
+                    return false;  
+                }
+            }
+        }
+        return true;  
+    };
+
     const switchPlayer = () => {
         _currentPlayer = (_currentPlayer === player1) ? player2 : player1;
     }
     
     const play = (x, y) => {
-        if (_checkWinner()) return; // prevent placing of marker if winner is already declared
+        if (_checkWinner() || _isDraw()) return; // prevent placing of marker if winner is already declared
         const _currentBoard = Gameboard.getBoard();
         if (!_currentBoard[x][y]) { // to check the validity of the current player's move
             _currentPlayer.setMove(x, y);
@@ -121,14 +139,23 @@ const Controller = (() => {
                 const winner = _checkWinner();
                 const result = document.querySelector('.display-result');
                 const resetGame = document.querySelector('.reset-game');
-                const gameWinner = (winner === player1.pick) ? player1.name : player2.name;
                 if (winner) {
-                    result.textContent = `${gameWinner} has won the game!`;
+                    const gameWinner = (winner === player1.pick) ? player1.name : player2.name;
+                    result.textContent = `${gameWinner} won the game!`;
+                } else if (_isDraw()) {
+                    result.textContent = 'It\'s a draw!';
+                }
+    
+                if (winner || _isDraw()) {
                     const resetBtn = document.createElement('button');
-                    resetBtn.textContent = 'Restart Game';
+                    resetBtn.textContent = 'Play Again';
                     resetGame.appendChild(resetBtn);
                     resetBtn.addEventListener('click', () => {
                         Gameboard.resetBoard();
+
+                        _picks.forEach(btn => {
+                            btn.disabled = false;
+                        });
                     });
                 }
             }, 0);
