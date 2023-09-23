@@ -47,7 +47,8 @@ const Gameboard = (() => {
     };
 })();
 
-const Player = (name, pick) => {
+const Player = (name) => {
+    let pick;
     return {
         name,
         pick,
@@ -59,32 +60,40 @@ const Player = (name, pick) => {
 }
 
 const Controller = (() => {
-    const player1 = Player('Player 1', 'X');
-    const player2 = Player('Player 2', 'O');
-    let _currentPlayer = player1;
+    let _currentPlayer;
+    const _picks = document.querySelectorAll('.mark')
+    _picks.forEach(pick => {
+        pick.addEventListener('click', () => {
+            player1.pick = pick.value;
+            player2.pick = (pick.value === 'X') ? 'O' : 'X';
+            _currentPlayer = (player1.pick === 'X') ? player1 : player2;
+        })
+    })
+    const player1 = Player('Player 1');
+    const player2 = Player('Player 2');
 
     const _checkWinner = () => {
         const board = Gameboard.getBoard();
 
-        // Check rows, columns, and diagonals
+        // Check rows, columns
         for (let i = 0; i < 3; i++) {
             if (board[i][0] === board[i][1] && board[i][1] === board[i][2] && board[i][0] !== null) {
-                return board[i][0]; // Row match
+                return board[i][0]; 
             }
             if (board[0][i] === board[1][i] && board[1][i] === board[2][i] && board[0][i] !== null) {
-                return board[0][i]; // Column match
+                return board[0][i]; 
             }
         }
 
         // Check diagonals
         if (board[0][0] === board[1][1] && board[1][1] === board[2][2] && board[0][0] !== null) {
-            return board[0][0]; // Main diagonal match
+            return board[0][0]; 
         }
         if (board[0][2] === board[1][1] && board[1][1] === board[2][0] && board[0][2] !== null) {
-            return board[0][2]; // Counter diagonal match
+            return board[0][2]; 
         }
 
-        return null; // No winner yet
+        return null; 
     }
 
     const switchPlayer = () => {
@@ -92,15 +101,16 @@ const Controller = (() => {
     }
     
     const play = (x, y) => {
+        if (_checkWinner()) return; // prevent placing of marker if winner is already declared
         const _currentBoard = Gameboard.getBoard();
         if (!_currentBoard[x][y]) { // to check the validity of the current player's move
             _currentPlayer.setMove(x, y);
             setTimeout(() => {
                 const winner = _checkWinner();
+                const result = document.querySelector('.display-result')
                 const gameWinner = (winner === player1.pick) ? player1.name : player2.name;
                 if (winner) {
-                    alert(gameWinner + " has won!");
-                    // Optional: Handle the end of the game, like resetting the board.
+                    result.textContent = `${gameWinner} has won the game!`;
                 }
             }, 0);
         }
