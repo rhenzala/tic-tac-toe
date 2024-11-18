@@ -13,3 +13,4 @@ The game makes heavy use of javascipt modules/ factory function.
 - **Gameboard module**: Handles the creation of gameboard, its rendering, and the underlying data.
 - **Controller module**: Handles the flow of game, how it should be played, and the decision on game winner or if it's a draw.
 - **Player**: Handles the player data, including their name, pick, and moves.
+- **Selection**: The script hides the play button until the player has selected his mark.
