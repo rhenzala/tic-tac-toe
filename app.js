@@ -67,31 +67,31 @@ const Player = (name) => {
 const Controller = (() => {
     let _currentPlayer;
     const _picks = document.querySelectorAll('.mark');
-    _picks.forEach(pick => {
-        pick.addEventListener('click', () => {
-            player1.pick = pick.value;
-            player2.pick = (pick.value === 'X') ? 'O' : 'X';
-            _currentPlayer = (player1.pick === 'X') ? player1 : player2;
-            _displayPlayerSelection(player1.pick, player2.pick);
-
-            _picks.forEach(btn => {
-                btn.disabled = true;
-            });
+        _picks.forEach(pick => {
+            pick.addEventListener('click', () => {
+                player1.pick = pick.value;
+                player2.pick = (pick.value === 'X') ? 'O' : 'X';
+                _currentPlayer = (player1.pick === 'X') ? player1 : player2;
+                _displayPlayerSelection(player1.pick, player2.pick);
+    
+                _picks.forEach(btn => {
+                    btn.disabled = true;
+                });
+            })
         })
-    })
+    
     const player1 = Player('Player 1');
     const player2 = Player('Player 2');
 
     const _displayPlayerSelection = (pick1, pick2) => {
         const p1Mark = document.querySelector('.player1');
         const p2Mark = document.querySelector('.player2');
-        p1Mark.textContent = `You selected ${pick1}`;
-        p2Mark.textContent = `The other player is ${pick2}`;
+        p1Mark.textContent = `Player 1: ${pick1}`;
+        p2Mark.textContent = `Player 2: ${pick2}`;
     }
     
     const _checkWinner = () => {
         const board = Gameboard.getBoard();
-
         // Check rows, columns
         for (let i = 0; i < 3; i++) {
             if (board[i][0] === board[i][1] && board[i][1] === board[i][2] && board[i][0] !== null) {
@@ -101,7 +101,6 @@ const Controller = (() => {
                 return board[0][i]; 
             }
         }
-
         // Check diagonals
         if (board[0][0] === board[1][1] && board[1][1] === board[2][2] && board[0][0] !== null) {
             return board[0][0]; 
@@ -166,9 +165,20 @@ const Controller = (() => {
     };
 })();
 
+const pickBtn = document.querySelectorAll('.mark')
 const playBtn = document.getElementById('play')
+pickBtn.forEach(pick => {
+    pick.addEventListener('click', () => {
+        playBtn.style.display = 'block';
+    });
+})
 playBtn.addEventListener('click', function(e) {
     const selection = document.querySelector('.selection')
-    selection.style.display = "none"
+    if (selection) {
+        selection.style.display = 'none';
+    }
     Gameboard.initialize();
 })
+
+
+
