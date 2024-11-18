@@ -167,5 +167,9 @@ const Controller = (() => {
     };
 })();
 
-Gameboard.initialize();
-
+const playBtn = document.getElementById('play')
+playBtn.addEventListener('click', function(e) {
+    const selection = document.querySelector('.selection')
+    selection.style.display = "none"
+    Gameboard.initialize();
+})
