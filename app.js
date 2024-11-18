@@ -85,11 +85,10 @@ const Controller = (() => {
     const _displayPlayerSelection = (pick1, pick2) => {
         const p1Mark = document.querySelector('.player1');
         const p2Mark = document.querySelector('.player2');
-        p1Mark.textContent = `Player 1 is ${pick1}`;
-        p2Mark.textContent = `Player 2 is ${pick2}`;
+        p1Mark.textContent = `You selected ${pick1}`;
+        p2Mark.textContent = `The other player is ${pick2}`;
     }
     
-
     const _checkWinner = () => {
         const board = Gameboard.getBoard();
 
