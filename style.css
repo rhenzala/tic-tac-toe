@@ -31,8 +31,10 @@ button{
     background-color: var(--accent-primary);
     color: var(--white);
     font-weight: 600;
+    font-size: 18px;
     outline: none;
     border: none;
+    border-radius: 8px;
     width: 150px;
     height: 40px;
 }
@@ -46,19 +48,22 @@ main,
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     padding: 14px;
 }
-
 .selection{
-    gap: 4px;
+    height: 200px;
     padding: 8px;
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 20px;
+    font-weight: 700;
 }
 .picks{
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
+    gap: 5px;
+}
+#play{
+    margin-top: auto;
 }
 .display-picks{
     height: 30px;
@@ -72,28 +77,23 @@ main,
 }
 .mark{
     width: 70px;
-    height: 30px;
-    margin: 6px;
 }
 .mark:focus{
     outline: 2px solid var(--accent-primary);
     background-color: var(--accent-secondary);
 }
-
 button[value="X"]{
     background-color: var(--green);
 }
 button[value="O"]{
     background-color: var(--red);
 }
-
 .gameboard{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     height: 307px;
     gap: 1px;
 }
-
 .cell{
     background-color: var(--white);
     font-size: 24px;
@@ -104,6 +104,7 @@ button[value="O"]{
     align-items: center;
     justify-content: center;
     border: 1px solid var(--accent-secondary);
+    border-radius: 8px;
     cursor: pointer;
 }
 .reset-game{
